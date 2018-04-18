@@ -4,54 +4,54 @@ from caesar import rotate_string
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
-
 form = """
 <!doctype html>
 <html>
     <head>
         <style>
-            form {
+            form {{
                 background-color: #eee;
                 padding: 20px;
                 margin: 0 auto;
-                width: 560px;
-                font: 20px sans-serif;
-                border-radius: 15px;
-            }
-            textarea {
+                width: 540px;
+                font: 16px sans-serif;
+                border-radius: 10px;
+            }}
+            textarea {{
                 margin: 10px 0;
-                width: 560px;
+                {0}
+                width: 540px;
                 height: 120px;
-            }
+            }}
         </style>
     </head>
     <body>
-        <form action="/rot" method="post">
-            <label for="Rotate-by">Rotate by:</label>
-            <input id="Rotate-by" value = 0 type="text" name="Rotate_by" />           
+        <form class="cipher-form" action = "/" method="post">
+        <textarea name="text" placeholders="Enter Message to Encrypt:">{0}</textarea>
+        <div>
+            <label for="rot">Rotate by:</label>
+            <input type="text" id="Rotate_by" name="Rotate_by" value ="0">           
+        </div>   
+
+        
+        
+        <input type="submit" value="Submit Query" >
             
-
-            <label>
-            <textarea name="text"></textarea>
-            </label>
-            <input type="submit"  />
-
-             
         </form>
     </body>
 </html>
 """
-def encrypt():
-    
+
 @app.route("/")
 def index():
-    return form
+    return form.format("")
 
-@app.route("/rot", methods=['POST'])
-def rot():
-    Rotate_by = request.form['Rotate_by']
-    return '<h1>Rotate By: ' + Rotate_by + '</h1>'
 
-    
+@app.route("/", methods=['POST'])
+def encrypt():
+    rot = int(request.form['Rotate_by'])
+    rotated_text = str(request.form['text'])
+    encrypted_text = rotate_string(rotated_text, rot)
+    return form.format(encrypted_text)
 
 app.run()
